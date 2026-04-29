@@ -1,7 +1,6 @@
-import userModel from "../models/user.model.js";
+import { userModel, blacklistTokenModel } from "../models/index.js";
 import { createUser } from "../services/user.service.js";
 import { validationResult } from "express-validator";
-import blacklistTokenModel from "../models/blacklistToken.model.js";
 
 export const registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -10,6 +9,14 @@ export const registerUser = async (req, res) => {
   }
 
   const { fullName, email, password } = req.body;
+
+  const isUserAlreadyRegistered = await userModel.findOne({ email });
+  if (isUserAlreadyRegistered) {
+    return res
+      .status(400)
+      .json({ error: "User with this email already exists" });
+  }
+
   const hashedPassword = await userModel.hashPassword(password);
 
   try {

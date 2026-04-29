@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectToDB } from "./config/db.js";
-import userRoutes from "./routes/user.routes.js";
+import { userRoutes, captainRoutes } from "./routes/index.js";
 
 const app = express();
 app.use(cors());
@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
+app.use("/api/captains", captainRoutes);
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server is running on port ${process.env.PORT || 3000}`);

@@ -3,13 +3,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const captainSchema = new mongoose.Schema({
-  fullname: {
-    firstname: {
+  fullName: {
+    firstName: {
       type: String,
       required: true,
       minlength: [3, "Firstname must be at least 3 characters long"],
     },
-    lastname: {
+    lastName: {
       type: String,
       minlength: [3, "Lastname must be at least 3 characters long"],
     },
@@ -80,5 +80,5 @@ captainSchema.statics.hashPassword = async function (password) {
   return await bcrypt.hash(password, 10);
 };
 
-const captainModel = mongoose.model("captain", captainSchema);
+const captainModel = mongoose.model("Captain", captainSchema);
 export default captainModel;

@@ -230,3 +230,101 @@ Returned when the token is missing, invalid, or blacklisted.
   "error": "Unauthorized"
 }
 ```
+
+# Captain Registration Endpoint
+
+## POST /api/captains/register
+
+### Description
+
+Registers a new captain and returns an authentication token with the created captain object.
+
+### Request Body
+
+Content-Type: application/json
+
+```json
+{
+  "fullName": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "secret123",
+  "vehicle": {
+    "color": "Black",
+    "plate": "ABC-1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+#### Validation Rules
+
+- `fullName.firstName`: required, minimum 3 characters
+- `fullName.lastName`: optional, minimum 3 characters if provided
+- `email`: required, must be a valid email
+- `password`: required, minimum 6 characters
+- `vehicle.color`: required, minimum 3 characters
+- `vehicle.plate`: required, minimum 3 characters
+- `vehicle.capacity`: required, integer, minimum 1
+- `vehicle.vehicleType`: required, one of `car`, `motorcycle`, `auto`
+
+### Responses
+
+#### 201 Created
+
+```json
+{
+  "token": "<jwt>",
+  "captain": {
+    "_id": "<id>",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "status": "inactive",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC-1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": null
+  }
+}
+```
+
+#### 400 Bad Request
+
+Returned when validation fails, required fields are missing, or the email already exists.
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid Email",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+Or:
+
+```json
+{
+  "error": "Missing required fields"
+}
+```
+
+Or:
+
+```json
+{
+  "error": "Captain with this email already exists"
+}
+```
