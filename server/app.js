@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { connectToDB } from "./config/db.js";
 import userRoutes from "./routes/user.routes.js";
 
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 connectToDB();
