@@ -6,6 +6,7 @@ import {
   UserSignup,
   CaptainLogin,
   CaptainSignup,
+  UserProtectWrapper,
   Home,
 } from "./pages/index.js";
 
@@ -18,7 +19,14 @@ function App() {
         <Route path="/signup" element={<UserSignup />} />
         <Route path="/captain-login" element={<CaptainLogin />} />
         <Route path="/captain-signup" element={<CaptainSignup />} />
-        <Route path="/home" element={<Home />} />
+        <Route
+          path="/home"
+          element={
+            <UserProtectWrapper>
+              <Home />
+            </UserProtectWrapper>
+          }
+        />
       </Routes>
     </div>
   );
