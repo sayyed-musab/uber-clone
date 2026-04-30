@@ -11,7 +11,7 @@ function UserSignup() {
   const submitHandler = (e) => {
     e.preventDefault();
     const newUser = {
-      fullname: {
+      fullName: {
         firstName,
         lastName,
       },
