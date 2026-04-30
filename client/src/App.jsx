@@ -8,6 +8,7 @@ import {
   CaptainSignup,
   UserProtectWrapper,
   Home,
+  UserLogout,
 } from "./pages/index.js";
 
 function App() {
@@ -24,6 +25,14 @@ function App() {
           element={
             <UserProtectWrapper>
               <Home />
+            </UserProtectWrapper>
+          }
+        />
+        <Route
+          path="/user/logout"
+          element={
+            <UserProtectWrapper>
+              <UserLogout />
             </UserProtectWrapper>
           }
         />
