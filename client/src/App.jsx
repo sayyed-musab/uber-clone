@@ -7,8 +7,10 @@ import {
   CaptainLogin,
   CaptainSignup,
   UserProtectWrapper,
-  Home,
+  UserHome,
   UserLogout,
+  CaptainHome,
+  CaptainLogout,
 } from "./pages/index.js";
 
 function App() {
@@ -24,7 +26,15 @@ function App() {
           path="/home"
           element={
             <UserProtectWrapper>
-              <Home />
+              <UserHome />
+            </UserProtectWrapper>
+          }
+        />
+        <Route
+          path="/captain-home"
+          element={
+            <UserProtectWrapper>
+              <CaptainHome />
             </UserProtectWrapper>
           }
         />
@@ -33,6 +43,14 @@ function App() {
           element={
             <UserProtectWrapper>
               <UserLogout />
+            </UserProtectWrapper>
+          }
+        />
+        <Route
+          path="/captain/logout"
+          element={
+            <UserProtectWrapper>
+              <CaptainLogout />
             </UserProtectWrapper>
           }
         />

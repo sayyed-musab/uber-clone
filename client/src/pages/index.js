@@ -4,8 +4,10 @@ import UserSignup from "./UserSignup";
 import CaptainLogin from "./CaptainLogin";
 import CaptainSignup from "./CaptainSignup";
 import UserProtectWrapper from "./UserProtectWrapper";
-import Home from "./Home";
+import UserHome from "./UserHome";
 import UserLogout from "./UserLogout";
+import CaptainHome from "./CaptainHome";
+import CaptainLogout from "./CaptainLogout";
 
 export {
   Start,
@@ -14,6 +16,8 @@ export {
   CaptainLogin,
   CaptainSignup,
   UserProtectWrapper,
-  Home,
+  UserHome,
   UserLogout,
+  CaptainHome,
+  CaptainLogout,
 };
