@@ -9,6 +9,7 @@ import {
   UserProtectWrapper,
   UserHome,
   UserLogout,
+  CaptainProtectWrapper,
   CaptainHome,
   CaptainLogout,
 } from "./pages/index.js";
@@ -33,9 +34,9 @@ function App() {
         <Route
           path="/captain-home"
           element={
-            <UserProtectWrapper>
+            <CaptainProtectWrapper>
               <CaptainHome />
-            </UserProtectWrapper>
+            </CaptainProtectWrapper>
           }
         />
         <Route
@@ -49,9 +50,9 @@ function App() {
         <Route
           path="/captain/logout"
           element={
-            <UserProtectWrapper>
+            <CaptainProtectWrapper>
               <CaptainLogout />
-            </UserProtectWrapper>
+            </CaptainProtectWrapper>
           }
         />
       </Routes>

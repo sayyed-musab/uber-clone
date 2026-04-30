@@ -6,6 +6,7 @@ import CaptainSignup from "./CaptainSignup";
 import UserProtectWrapper from "./UserProtectWrapper";
 import UserHome from "./UserHome";
 import UserLogout from "./UserLogout";
+import CaptainProtectWrapper from "./CaptainProtectWrapper";
 import CaptainHome from "./CaptainHome";
 import CaptainLogout from "./CaptainLogout";
 
@@ -18,6 +19,7 @@ export {
   UserProtectWrapper,
   UserHome,
   UserLogout,
+  CaptainProtectWrapper,
   CaptainHome,
   CaptainLogout,
 };
