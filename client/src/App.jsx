@@ -12,7 +12,8 @@ import {
   CaptainProtectWrapper,
   CaptainHome,
   CaptainLogout,
-  Riding,
+  UserRiding,
+  CaptainRiding,
 } from "./pages/index.js";
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
         <Route path="/" element={<Start />} />
         <Route path="/login" element={<UserLogin />} />
         <Route path="/signup" element={<UserSignup />} />
-        <Route path="/riding" element={<Riding />} />
+        <Route path="/riding" element={<UserRiding />} />
+        <Route path="/captain-riding" element={<CaptainRiding />} />
         <Route path="/captain-login" element={<CaptainLogin />} />
         <Route path="/captain-signup" element={<CaptainSignup />} />
         <Route

@@ -9,7 +9,9 @@ import UserLogout from "./UserLogout";
 import CaptainProtectWrapper from "./CaptainProtectWrapper";
 import CaptainHome from "./CaptainHome";
 import CaptainLogout from "./CaptainLogout";
-import Riding from "./Riding";
+import UserRiding from "./UserRiding";
+import CaptainRiding from "./CaptainRiding";
+
 export {
   Start,
   UserLogin,
@@ -22,5 +24,6 @@ export {
   CaptainProtectWrapper,
   CaptainHome,
   CaptainLogout,
-  Riding,
+  UserRiding,
+  CaptainRiding,
 };

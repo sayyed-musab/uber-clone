@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Riding() {
+function UserRiding() {
   return (
     <div className="h-screen">
       <Link
@@ -59,4 +59,4 @@ function Riding() {
   );
 }
 
-export default Riding;
+export default UserRiding;
