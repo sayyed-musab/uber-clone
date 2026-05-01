@@ -1,7 +1,6 @@
 import React from "react";
 
 const LocationSearchPanel = (props) => {
-  // sample array for location
   const locations = [
     "24B, Near Kapoor's cafe, Sheryians Coding School, Bhopal",
     "22C, Near Malholtra's cafe, Sheryians Coding School, Bhopal",
@@ -11,7 +10,6 @@ const LocationSearchPanel = (props) => {
 
   return (
     <div>
-      {/* this is just a sample data  */}
       {locations.map(function (elem, idx) {
         return (
           <div
@@ -19,11 +17,7 @@ const LocationSearchPanel = (props) => {
             onClick={() => {
               props.setIsVehiclePanelOpen(true);
               props.setIsLocationPanelOpen(false);
-              console.log("setIsVehiclePanelOpen", props.setIsVehiclePanelOpen);
-              console.log(
-                "setIsLocationPanelOpen",
-                props.setIsLocationPanelOpen,
-              );
+              props.setIsPanelOpen(false);
             }}
             className="flex gap-4 border-2 p-3 border-gray-50 active:border-black rounded-xl items-center my-2 justify-start"
           >

@@ -12,6 +12,7 @@ function UserHome() {
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isLocationPanelOpen, setIsLocationPanelOpen] = useState(false);
   const [isVehiclePanelOpen, setIsVehiclePanelOpen] = useState(false);
   const [isConfirmRidePanelOpen, setIsConfirmRidePanelOpen] = useState(false);
   const [isLookingForDriver, setIsLookingForDriver] = useState(false);
@@ -28,9 +29,9 @@ function UserHome() {
       const timer = setTimeout(() => {
         setIsLookingForDriver(false);
         setIsWaitingForDriver(true);
-      }, 5000); // 5000ms = 5 seconds
+      }, 5000);
 
-      return () => clearTimeout(timer); // Cleanup timer if component unmounts
+      return () => clearTimeout(timer);
     }
   }, [isLookingForDriver]);
 
@@ -38,7 +39,6 @@ function UserHome() {
     e.preventDefault();
   };
 
-  // GSAP Animation for the Bottom Search Panel
   useGSAP(() => {
     if (isPanelOpen) {
       gsap.to(panelRef.current, {
@@ -53,7 +53,6 @@ function UserHome() {
     }
   }, [isPanelOpen]);
 
-  // GSAP Animation for Vehicle Selection Panel
   useGSAP(() => {
     if (isVehiclePanelOpen) {
       gsap.to(vehiclePanelRef.current, { transform: "translateY(0)" });
@@ -62,7 +61,6 @@ function UserHome() {
     }
   }, [isVehiclePanelOpen]);
 
-  // GSAP Animation for Confirm Ride Panel
   useGSAP(() => {
     if (isConfirmRidePanelOpen) {
       gsap.to(confirmRidePanelRef.current, { transform: "translateY(0)" });
@@ -71,7 +69,6 @@ function UserHome() {
     }
   }, [isConfirmRidePanelOpen]);
 
-  // GSAP Animation for Looking For Driver Panel
   useGSAP(() => {
     if (isLookingForDriver) {
       gsap.to(lookingForDriverRef.current, { transform: "translateY(0)" });
@@ -80,7 +77,6 @@ function UserHome() {
     }
   }, [isLookingForDriver]);
 
-  // GSAP Animation for Waiting For Driver Panel
   useGSAP(() => {
     if (isWaitingForDriver) {
       gsap.to(waitingForDriverRef.current, { transform: "translateY(0)" });
@@ -105,7 +101,6 @@ function UserHome() {
         />
       </div>
 
-      {/* SEARCH PANEL */}
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
         <div className="h-[30%] p-5 bg-white relative">
           <h5
@@ -122,7 +117,10 @@ function UserHome() {
             <input
               className="bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-5"
               type="text"
-              onClick={() => setIsPanelOpen(true)}
+              onClick={() => {
+                setIsPanelOpen(true);
+                setIsLocationPanelOpen(true);
+              }}
               placeholder="Add a pick-up location"
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
@@ -130,7 +128,10 @@ function UserHome() {
             <input
               className="bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-3"
               type="text"
-              onClick={() => setIsPanelOpen(true)}
+              onClick={() => {
+                setIsPanelOpen(true);
+                setIsLocationPanelOpen(true);
+              }}
               placeholder="Enter your destination"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
@@ -139,13 +140,13 @@ function UserHome() {
         </div>
         <div ref={panelRef} className="h-0 bg-white overflow-hidden">
           <LocationSearchPanel
-            setIsPanelOpen={setIsPanelOpen}
             setIsVehiclePanelOpen={setIsVehiclePanelOpen}
+            setIsLocationPanelOpen={setIsLocationPanelOpen}
+            setIsPanelOpen={setIsPanelOpen}
           />
         </div>
       </div>
 
-      {/* VEHICLE PANEL */}
       <div
         ref={vehiclePanelRef}
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-10 pt-12 translate-y-full"
@@ -156,7 +157,6 @@ function UserHome() {
         />
       </div>
 
-      {/* CONFIRM RIDE PANEL */}
       <div
         ref={confirmRidePanelRef}
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-6 pt-12 translate-y-full"
@@ -167,7 +167,6 @@ function UserHome() {
         />
       </div>
 
-      {/* LOOKING FOR DRIVER PANEL */}
       <div
         ref={lookingForDriverRef}
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-6 pt-12 translate-y-full"
@@ -175,7 +174,6 @@ function UserHome() {
         <LookingForDriver setIsLookingForDriver={setIsLookingForDriver} />
       </div>
 
-      {/* WAITING FOR DRIVER PANEL */}
       <div
         ref={waitingForDriverRef}
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-6 pt-12 translate-y-full"
