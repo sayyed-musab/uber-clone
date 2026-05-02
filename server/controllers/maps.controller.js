@@ -1,6 +1,6 @@
 import {
   getAddressCoordinates,
-  getDistanceTime,
+  getDistanceAndTime,
   getAutoCompleteSuggestions,
 } from "../services/maps.service.js";
 import { validationResult } from "express-validator";
@@ -20,7 +20,7 @@ export const getCoordinates = async (req, res) => {
   }
 };
 
-export const getDistanceAndTime = async (req, res) => {
+export const getDistanceAndTimeController = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -38,7 +38,7 @@ export const getDistanceAndTime = async (req, res) => {
   }
 };
 
-export const getSuggestions = async (req, res) => {
+export const getAutoCompleteSuggestionsController = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

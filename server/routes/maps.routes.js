@@ -3,8 +3,8 @@ const router = express.Router();
 import { authUser } from "../middlewares/auth.middleware.js";
 import {
   getCoordinates,
-  getDistanceAndTime,
-  getSuggestions,
+  getDistanceAndTimeController,
+  getAutoCompleteSuggestionsController,
 } from "../controllers/maps.controller.js";
 import { query } from "express-validator";
 
@@ -28,14 +28,14 @@ router.get(
     .isLength({ min: 3 })
     .withMessage("Destination must be at least 3 characters long"),
   authUser,
-  getDistanceAndTime,
+  getDistanceAndTimeController,
 );
 
 router.get(
   "/get-suggestions",
   query("input").isString().isLength({ min: 3 }),
   authUser,
-  getSuggestions,
+  getAutoCompleteSuggestionsController,
 );
 
 export default router;

@@ -26,7 +26,7 @@ export const getAddressCoordinates = async (address) => {
   }
 };
 
-export const getDistanceTime = async (origin, destination) => {
+export const getDistanceAndTime = async (origin, destination) => {
   if (!origin || !destination) {
     throw new Error("Origin and destination are required");
   }
