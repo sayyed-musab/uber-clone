@@ -497,6 +497,207 @@ Required. Provide either:
 
 Returned when the token is missing, invalid, or blacklisted.
 
+# Maps Endpoints
+
+All maps endpoints require authentication. Provide either:
+
+- `Authorization: Bearer <token>`
+- `token` cookie
+
+## GET /api/maps/get-coordinates
+
+### Description
+
+Returns latitude/longitude for a given address.
+
+### Query Params
+
+- `address` (string, min 3 chars)
+
+### Responses
+
+#### 200 OK
+
+```json
+{
+  "ltd": 12.9716,
+  "lng": 77.5946
+}
+```
+
+#### 400 Bad Request
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Address must be at least 3 characters long",
+      "param": "address",
+      "location": "query"
+    }
+  ]
+}
+```
+
+## GET /api/maps/get-distance-and-time
+
+### Description
+
+Returns distance and duration between origin and destination.
+
+### Query Params
+
+- `origin` (string, min 3 chars)
+- `destination` (string, min 3 chars)
+
+### Responses
+
+#### 200 OK
+
+```json
+{
+  "distance": {
+    "text": "8.2 km",
+    "value": 8200
+  },
+  "duration": {
+    "text": "18 mins",
+    "value": 1080
+  },
+  "status": "OK"
+}
+```
+
+#### 400 Bad Request
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Origin must be at least 3 characters long",
+      "param": "origin",
+      "location": "query"
+    }
+  ]
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "message": "Internal server error"
+}
+```
+
+## GET /api/maps/get-suggestions
+
+### Description
+
+Returns place autocomplete suggestions for a query string.
+
+### Query Params
+
+- `input` (string, min 3 chars)
+
+### Responses
+
+#### 200 OK
+
+```json
+[
+  "MG Road, Bengaluru, Karnataka, India",
+  "MG Road Metro Station, Bengaluru, Karnataka, India"
+]
+```
+
+#### 400 Bad Request
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid value",
+      "param": "input",
+      "location": "query"
+    }
+  ]
+}
+```
+
+# Ride Endpoints
+
+All ride endpoints require authentication. Provide either:
+
+- `Authorization: Bearer <token>`
+- `token` cookie
+
+## POST /api/rides/create
+
+### Description
+
+Creates a ride request and returns the ride details with fare and OTP.
+
+### Request Body
+
+Content-Type: application/json
+
+```json
+{
+  "pickup": "MG Road, Bengaluru",
+  "destination": "Indiranagar, Bengaluru",
+  "vehicleType": "car"
+}
+```
+
+#### Validation Rules
+
+- `pickup`: required, minimum 3 characters
+- `destination`: required, minimum 3 characters
+- `vehicleType`: required, one of `auto`, `car`, `motorcycle`
+
+### Responses
+
+#### 201 Created
+
+```json
+{
+  "_id": "<id>",
+  "user": "<userId>",
+  "pickup": "MG Road, Bengaluru",
+  "destination": "Indiranagar, Bengaluru",
+  "fare": 155,
+  "status": "pending",
+  "duration": null,
+  "distance": null,
+  "paymentID": null,
+  "orderId": null,
+  "signature": null
+}
+```
+
+#### 400 Bad Request
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid vehicle type",
+      "param": "vehicleType",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "message": "<error message>"
+}
+```
+
 ```json
 {
   "error": "Unauthorized"

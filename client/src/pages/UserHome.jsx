@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
+import axios from "axios";
 import LocationSearchPanel from "../components/LocationSearchPanel";
 import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
@@ -17,6 +18,8 @@ function UserHome() {
   const [isConfirmRidePanelOpen, setIsConfirmRidePanelOpen] = useState(false);
   const [isLookingForDriver, setIsLookingForDriver] = useState(false);
   const [isWaitingForDriver, setIsWaitingForDriver] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [activeField, setActiveField] = useState("pickup");
 
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
@@ -24,65 +27,94 @@ function UserHome() {
   const lookingForDriverRef = useRef(null);
   const waitingForDriverRef = useRef(null);
 
+  // Transition timer: Looking for Driver -> Waiting for Driver
   useEffect(() => {
     if (isLookingForDriver) {
       const timer = setTimeout(() => {
         setIsLookingForDriver(false);
         setIsWaitingForDriver(true);
       }, 5000);
-
       return () => clearTimeout(timer);
     }
   }, [isLookingForDriver]);
 
+  // Suggestion API Fetching
+  useEffect(() => {
+    if (!isLocationPanelOpen) return;
+    const query = activeField === "pickup" ? pickup : destination;
+    if (!query || query.trim().length < 3) {
+      setSuggestions([]);
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    const timeoutId = setTimeout(async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/maps/get-suggestions`,
+          {
+            params: { input: query },
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          },
+        );
+        setSuggestions(response.data || []);
+      } catch (error) {
+        console.error(error);
+        setSuggestions([]);
+      }
+    }, 300);
+    return () => clearTimeout(timeoutId);
+  }, [pickup, destination, activeField, isLocationPanelOpen]);
+
   const submitHandler = (e) => {
     e.preventDefault();
+    // When the user clicks "Find Trip", close search and open vehicle selection
+    setIsPanelOpen(false);
+    setIsLocationPanelOpen(false);
+    setIsVehiclePanelOpen(true);
   };
 
-  useGSAP(() => {
-    if (isPanelOpen) {
-      gsap.to(panelRef.current, {
-        height: "70%",
-        padding: 20,
-      });
+  const handleSuggestionSelect = (value) => {
+    const trimmedValue = value.trim();
+    if (activeField === "pickup") {
+      setPickup(trimmedValue);
     } else {
-      gsap.to(panelRef.current, {
-        height: "0%",
-        padding: 0,
-      });
+      setDestination(trimmedValue);
     }
+    // Note: We don't automatically close the panel here anymore
+    // to allow the user to see the "Find Trip" button.
+  };
+
+  // GSAP Animations
+  useGSAP(() => {
+    gsap.to(panelRef.current, {
+      height: isPanelOpen ? "70%" : "0%",
+      padding: isPanelOpen ? 20 : 0,
+    });
   }, [isPanelOpen]);
 
   useGSAP(() => {
-    if (isVehiclePanelOpen) {
-      gsap.to(vehiclePanelRef.current, { transform: "translateY(0)" });
-    } else {
-      gsap.to(vehiclePanelRef.current, { transform: "translateY(100%)" });
-    }
+    gsap.to(vehiclePanelRef.current, {
+      transform: isVehiclePanelOpen ? "translateY(0)" : "translateY(100%)",
+    });
   }, [isVehiclePanelOpen]);
 
   useGSAP(() => {
-    if (isConfirmRidePanelOpen) {
-      gsap.to(confirmRidePanelRef.current, { transform: "translateY(0)" });
-    } else {
-      gsap.to(confirmRidePanelRef.current, { transform: "translateY(100%)" });
-    }
+    gsap.to(confirmRidePanelRef.current, {
+      transform: isConfirmRidePanelOpen ? "translateY(0)" : "translateY(100%)",
+    });
   }, [isConfirmRidePanelOpen]);
 
   useGSAP(() => {
-    if (isLookingForDriver) {
-      gsap.to(lookingForDriverRef.current, { transform: "translateY(0)" });
-    } else {
-      gsap.to(lookingForDriverRef.current, { transform: "translateY(100%)" });
-    }
+    gsap.to(lookingForDriverRef.current, {
+      transform: isLookingForDriver ? "translateY(0)" : "translateY(100%)",
+    });
   }, [isLookingForDriver]);
 
   useGSAP(() => {
-    if (isWaitingForDriver) {
-      gsap.to(waitingForDriverRef.current, { transform: "translateY(0)" });
-    } else {
-      gsap.to(waitingForDriverRef.current, { transform: "translateY(100%)" });
-    }
+    gsap.to(waitingForDriverRef.current, {
+      transform: isWaitingForDriver ? "translateY(0)" : "translateY(100%)",
+    });
   }, [isWaitingForDriver]);
 
   return (
@@ -104,10 +136,11 @@ function UserHome() {
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
         <div className="h-[30%] p-5 bg-white relative">
           <h5
-            className={`absolute right-3 top-6 text-xl transition-opacity ${
-              isPanelOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
-            onClick={() => setIsPanelOpen(false)}
+            className={`absolute right-3 top-6 text-xl transition-opacity ${isPanelOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+            onClick={() => {
+              setIsPanelOpen(false);
+              setIsLocationPanelOpen(false);
+            }}
           >
             <i className="ri-arrow-down-wide-line"></i>
           </h5>
@@ -120,10 +153,14 @@ function UserHome() {
               onClick={() => {
                 setIsPanelOpen(true);
                 setIsLocationPanelOpen(true);
+                setActiveField("pickup");
               }}
               placeholder="Add a pick-up location"
               value={pickup}
-              onChange={(e) => setPickup(e.target.value)}
+              onChange={(e) => {
+                setPickup(e.target.value);
+                setActiveField("pickup");
+              }}
             />
             <input
               className="bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-3"
@@ -131,15 +168,31 @@ function UserHome() {
               onClick={() => {
                 setIsPanelOpen(true);
                 setIsLocationPanelOpen(true);
+                setActiveField("destination");
               }}
               placeholder="Enter your destination"
               value={destination}
-              onChange={(e) => setDestination(e.target.value)}
+              onChange={(e) => {
+                setDestination(e.target.value);
+                setActiveField("destination");
+              }}
             />
+
+            {/* NEW FIND TRIP BUTTON */}
+            {pickup && destination && (
+              <button
+                type="submit"
+                className="w-full bg-black text-white mt-5 py-2 rounded-lg font-semibold"
+              >
+                Find Trip
+              </button>
+            )}
           </form>
         </div>
         <div ref={panelRef} className="h-0 bg-white overflow-hidden">
           <LocationSearchPanel
+            suggestions={suggestions}
+            onSuggestionSelect={handleSuggestionSelect}
             setIsVehiclePanelOpen={setIsVehiclePanelOpen}
             setIsLocationPanelOpen={setIsLocationPanelOpen}
             setIsPanelOpen={setIsPanelOpen}
@@ -147,6 +200,7 @@ function UserHome() {
         </div>
       </div>
 
+      {/* REMAINDER OF PANELS */}
       <div
         ref={vehiclePanelRef}
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-10 pt-12 translate-y-full"

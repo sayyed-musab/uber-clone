@@ -52,7 +52,7 @@ const VehiclePanel = (props) => {
         />
         <div className="-ml-2 w-1/2">
           <h4 className="font-medium text-base">
-            Moto{" "}
+            Motorcycle{" "}
             <span>
               <i className="ri-user-3-fill"></i>1
             </span>
