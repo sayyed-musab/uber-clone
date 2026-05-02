@@ -20,6 +20,8 @@ function UserHome() {
   const [isWaitingForDriver, setIsWaitingForDriver] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [activeField, setActiveField] = useState("pickup");
+  const [fares, setFares] = useState(null);
+  const [isFareLoading, setIsFareLoading] = useState(false);
 
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
@@ -65,6 +67,52 @@ function UserHome() {
     }, 300);
     return () => clearTimeout(timeoutId);
   }, [pickup, destination, activeField, isLocationPanelOpen]);
+
+  useEffect(() => {
+    if (!isVehiclePanelOpen) {
+      return;
+    }
+
+    if (!pickup || !destination) {
+      setFares(null);
+      return;
+    }
+
+    let isCancelled = false;
+    const token = localStorage.getItem("token");
+
+    const fetchFare = async () => {
+      setIsFareLoading(true);
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/rides/get-fare`,
+          {
+            params: { pickup, destination },
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          },
+        );
+
+        if (!isCancelled) {
+          setFares(response.data || null);
+        }
+      } catch (error) {
+        console.error(error);
+        if (!isCancelled) {
+          setFares(null);
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsFareLoading(false);
+        }
+      }
+    };
+
+    fetchFare();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [pickup, destination, isVehiclePanelOpen]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -206,6 +254,8 @@ function UserHome() {
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-10 pt-12 translate-y-full"
       >
         <VehiclePanel
+          fares={fares}
+          isFareLoading={isFareLoading}
           setIsVehiclePanelOpen={setIsVehiclePanelOpen}
           setIsConfirmRidePanelOpen={setIsConfirmRidePanelOpen}
         />

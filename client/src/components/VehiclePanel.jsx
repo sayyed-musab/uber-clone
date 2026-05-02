@@ -1,6 +1,15 @@
 import React from "react";
 
 const VehiclePanel = (props) => {
+  const { fares, isFareLoading } = props;
+
+  const formatFare = (value) => {
+    if (typeof value === "number") {
+      return `₹${value}`;
+    }
+
+    return isFareLoading ? "₹..." : "₹—";
+  };
   return (
     <div>
       <h5
@@ -36,7 +45,7 @@ const VehiclePanel = (props) => {
             Affordable, compact rides
           </p>
         </div>
-        <h2 className="text-lg font-semibold">₹193.20</h2>
+        <h2 className="text-lg font-semibold">{formatFare(fares?.car)}</h2>
       </div>
       <div
         onClick={() => {
@@ -62,7 +71,9 @@ const VehiclePanel = (props) => {
             Affordable motorcycle rides
           </p>
         </div>
-        <h2 className="text-lg font-semibold">₹65</h2>
+        <h2 className="text-lg font-semibold">
+          {formatFare(fares?.motorcycle)}
+        </h2>
       </div>
       <div
         onClick={() => {
@@ -88,7 +99,7 @@ const VehiclePanel = (props) => {
             Affordable Auto rides
           </p>
         </div>
-        <h2 className="text-lg font-semibold">₹118.86</h2>
+        <h2 className="text-lg font-semibold">{formatFare(fares?.auto)}</h2>
       </div>
     </div>
   );
