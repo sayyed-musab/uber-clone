@@ -60,7 +60,6 @@ function getOtp(num) {
 
 export const createRide = async (rideDetails) => {
   const { user, pickup, destination, vehicleType } = rideDetails;
-  console.log(user, pickup, destination, vehicleType);
   if (!user || !pickup || !destination || !vehicleType) {
     throw new Error("All fields are required");
   }

@@ -5,7 +5,7 @@ import "remixicon/fonts/remixicon.css";
 import axios from "axios";
 import LocationSearchPanel from "../components/LocationSearchPanel";
 import VehiclePanel from "../components/VehiclePanel";
-import ConfirmRide from "../components/ConfirmRide";
+import UserConfirmRide from "../components/UserConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
 
@@ -22,6 +22,9 @@ function UserHome() {
   const [activeField, setActiveField] = useState("pickup");
   const [fares, setFares] = useState(null);
   const [isFareLoading, setIsFareLoading] = useState(false);
+  const [selectedVehicleType, setSelectedVehicleType] = useState("");
+  const [selectedVehicleLabel, setSelectedVehicleLabel] = useState("");
+  const [isCreateRideLoading, setIsCreateRideLoading] = useState(false);
 
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
@@ -120,6 +123,43 @@ function UserHome() {
     setIsPanelOpen(false);
     setIsLocationPanelOpen(false);
     setIsVehiclePanelOpen(true);
+  };
+
+  const handleVehicleSelect = ({ type, label }) => {
+    setSelectedVehicleType(type);
+    setSelectedVehicleLabel(label);
+    setIsVehiclePanelOpen(false);
+    setIsConfirmRidePanelOpen(true);
+  };
+
+  const handleCreateRide = async () => {
+    if (!pickup || !destination || !selectedVehicleType) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    setIsCreateRideLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/rides/create`,
+        {
+          pickup,
+          destination,
+          vehicleType: selectedVehicleType,
+        },
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        },
+      );
+
+      setIsConfirmRidePanelOpen(false);
+      setIsLookingForDriver(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsCreateRideLoading(false);
+    }
   };
 
   const handleSuggestionSelect = (value) => {
@@ -256,8 +296,8 @@ function UserHome() {
         <VehiclePanel
           fares={fares}
           isFareLoading={isFareLoading}
+          onSelectVehicle={handleVehicleSelect}
           setIsVehiclePanelOpen={setIsVehiclePanelOpen}
-          setIsConfirmRidePanelOpen={setIsConfirmRidePanelOpen}
         />
       </div>
 
@@ -265,9 +305,15 @@ function UserHome() {
         ref={confirmRidePanelRef}
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-6 pt-12 translate-y-full"
       >
-        <ConfirmRide
+        <UserConfirmRide
+          pickup={pickup}
+          destination={destination}
+          vehicleLabel={selectedVehicleLabel}
+          vehicleType={selectedVehicleType}
+          fare={fares?.[selectedVehicleType]}
+          isCreateRideLoading={isCreateRideLoading}
+          onConfirm={handleCreateRide}
           setIsConfirmRidePanelOpen={setIsConfirmRidePanelOpen}
-          setIsLookingForDriver={setIsLookingForDriver}
         />
       </div>
 

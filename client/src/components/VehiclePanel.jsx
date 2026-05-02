@@ -1,7 +1,7 @@
 import React from "react";
 
 const VehiclePanel = (props) => {
-  const { fares, isFareLoading } = props;
+  const { fares, isFareLoading, onSelectVehicle } = props;
 
   const formatFare = (value) => {
     if (typeof value === "number") {
@@ -23,8 +23,7 @@ const VehiclePanel = (props) => {
       <h3 className="text-2xl font-semibold mb-5">Choose a Vehicle</h3>
       <div
         onClick={() => {
-          props.setIsVehiclePanelOpen(false);
-          props.setIsConfirmRidePanelOpen(true);
+          onSelectVehicle({ type: "car", label: "UberGo" });
         }}
         className="flex border-2 active:border-black  mb-2 rounded-xl w-full p-3  items-center justify-between"
       >
@@ -49,8 +48,7 @@ const VehiclePanel = (props) => {
       </div>
       <div
         onClick={() => {
-          props.setIsVehiclePanelOpen(false);
-          props.setIsConfirmRidePanelOpen(true);
+          onSelectVehicle({ type: "motorcycle", label: "Motorcycle" });
         }}
         className="flex border-2 active:border-black mb-2 rounded-xl w-full p-3  items-center justify-between"
       >
@@ -77,8 +75,7 @@ const VehiclePanel = (props) => {
       </div>
       <div
         onClick={() => {
-          props.setIsVehiclePanelOpen(false);
-          props.setIsConfirmRidePanelOpen(true);
+          onSelectVehicle({ type: "auto", label: "UberAuto" });
         }}
         className="flex border-2 active:border-black mb-2 rounded-xl w-full p-3  items-center justify-between"
       >
