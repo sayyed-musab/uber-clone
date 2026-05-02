@@ -21,3 +21,19 @@ export const createRideController = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
+
+export const getFareController = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { pickup, destination } = req.query;
+
+  try {
+    const fare = await getFare(pickup, destination);
+    return res.status(200).json(fare);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};

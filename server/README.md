@@ -632,6 +632,51 @@ All ride endpoints require authentication. Provide either:
 - `Authorization: Bearer <token>`
 - `token` cookie
 
+## GET /api/rides/get-fare
+
+### Description
+
+Returns fare estimates for auto, car, and motorcycle between pickup and destination.
+
+### Query Params
+
+- `pickup` (string, min 3 chars)
+- `destination` (string, min 3 chars)
+
+### Responses
+
+#### 200 OK
+
+```json
+{
+  "auto": 92,
+  "car": 140,
+  "motorcycle": 78
+}
+```
+
+#### 400 Bad Request
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid value",
+      "param": "pickup",
+      "location": "query"
+    }
+  ]
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "message": "<error message>"
+}
+```
+
 ## POST /api/rides/create
 
 ### Description
