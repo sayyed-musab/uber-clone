@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
@@ -8,6 +8,10 @@ import VehiclePanel from "../components/VehiclePanel";
 import UserConfirmRide from "../components/UserConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
+import { SocketContext } from "../context/SocketContext";
+import { UserDataContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking";
 
 function UserHome() {
   const [pickup, setPickup] = useState("");
@@ -25,6 +29,26 @@ function UserHome() {
   const [selectedVehicleType, setSelectedVehicleType] = useState("");
   const [selectedVehicleLabel, setSelectedVehicleLabel] = useState("");
   const [isCreateRideLoading, setIsCreateRideLoading] = useState(false);
+  const [ride, setRide] = useState(null);
+
+  const navigate = useNavigate();
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserDataContext);
+
+  useEffect(() => {
+    socket.emit("join", { userType: "user", userId: user._id });
+  }, [user]);
+
+  socket.on("ride-confirmed", (ride) => {
+    setRide(ride);
+    setIsLookingForDriver(false);
+    setIsWaitingForDriver(true);
+  });
+
+  socket.on("ride-started", (ride) => {
+    setIsWaitingForDriver(false);
+    navigate("/riding", { state: { ride: ride } });
+  });
 
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
@@ -32,18 +56,6 @@ function UserHome() {
   const lookingForDriverRef = useRef(null);
   const waitingForDriverRef = useRef(null);
 
-  // Transition timer: Looking for Driver -> Waiting for Driver
-  useEffect(() => {
-    if (isLookingForDriver) {
-      const timer = setTimeout(() => {
-        setIsLookingForDriver(false);
-        setIsWaitingForDriver(true);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [isLookingForDriver]);
-
-  // Suggestion API Fetching
   useEffect(() => {
     if (!isLocationPanelOpen) return;
     const query = activeField === "pickup" ? pickup : destination;
@@ -169,8 +181,6 @@ function UserHome() {
     } else {
       setDestination(trimmedValue);
     }
-    // Note: We don't automatically close the panel here anymore
-    // to allow the user to see the "Find Trip" button.
   };
 
   // GSAP Animations
@@ -214,11 +224,7 @@ function UserHome() {
       />
 
       <div className="h-screen w-screen">
-        <img
-          src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/3:2/w_2560%2Cc_limit/GoogleMapTA.jpg"
-          className="h-full w-full object-cover"
-          alt="Map"
-        />
+        <LiveTracking />
       </div>
 
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
@@ -232,9 +238,8 @@ function UserHome() {
           >
             <i className="ri-arrow-down-wide-line"></i>
           </h5>
-          <h4 className="text-3xl font-semibold">Find a trip</h4>
+          <h4 className="text-3xl font-semibold mt-8">Find a trip</h4>
           <form onSubmit={submitHandler}>
-            <div className="line absolute h-16 w-1 top-[33%] left-10 bg-gray-700 rounded-full"></div>
             <input
               className="bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-5"
               type="text"
@@ -321,14 +326,22 @@ function UserHome() {
         ref={lookingForDriverRef}
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-6 pt-12 translate-y-full"
       >
-        <LookingForDriver setIsLookingForDriver={setIsLookingForDriver} />
+        <LookingForDriver
+          pickup={pickup}
+          destination={destination}
+          fare={fares?.[selectedVehicleType]}
+          setIsLookingForDriver={setIsLookingForDriver}
+        />
       </div>
 
       <div
         ref={waitingForDriverRef}
         className="fixed w-full z-10 bottom-0 bg-white px-3 py-6 pt-12 translate-y-full"
       >
-        <WaitingForDriver setIsWaitingForDriver={setIsWaitingForDriver} />
+        <WaitingForDriver
+          ride={ride}
+          setIsWaitingForDriver={setIsWaitingForDriver}
+        />
       </div>
     </div>
   );

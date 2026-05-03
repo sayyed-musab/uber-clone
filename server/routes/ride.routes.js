@@ -4,8 +4,11 @@ import { body, query } from "express-validator";
 import {
   createRideController,
   getFareController,
+  confirmRideController,
+  startRideController,
+  endRideController,
 } from "../controllers/ride.controller.js";
-import { authUser } from "../middlewares/auth.middleware.js";
+import { authUser, authCaptain } from "../middlewares/auth.middleware.js";
 
 router.post(
   "/create",
@@ -37,6 +40,31 @@ router.get(
     .withMessage("Invalid destination address"),
   authUser,
   getFareController,
+);
+
+router.post(
+  "/confirm",
+  authCaptain,
+  body("rideId").isMongoId().withMessage("Invalid ride id"),
+  confirmRideController,
+);
+
+router.get(
+  "/start-ride",
+  authCaptain,
+  query("rideId").isMongoId().withMessage("Invalid ride id"),
+  query("otp")
+    .isString()
+    .isLength({ min: 6, max: 6 })
+    .withMessage("Invalid OTP"),
+  startRideController,
+);
+
+router.post(
+  "/end-ride",
+  authCaptain,
+  body("rideId").isMongoId().withMessage("Invalid ride id"),
+  endRideController,
 );
 
 export default router;

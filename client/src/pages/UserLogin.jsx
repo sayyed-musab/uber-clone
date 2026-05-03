@@ -27,7 +27,7 @@ function UserLogin() {
 
     if (response.status === 200) {
       const data = response.data;
-      setUser(data.user);
+      setUser(data.user.user);
       localStorage.setItem("token", data.token);
       navigate("/home");
     }

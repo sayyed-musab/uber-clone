@@ -21,7 +21,7 @@ function CaptainLogin() {
 
     if (response.status === 200) {
       const data = response.data;
-      setCaptain(data.captain);
+      setCaptain(data.captain.captain);
       localStorage.setItem("token", data.token);
       navigate("/captain-home");
     }

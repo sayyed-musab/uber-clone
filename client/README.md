@@ -1,16 +1,81 @@
-# React + Vite
+# Client (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+Single-page app for riders and captains. Uses React Router for navigation, Tailwind for styling, Axios for API calls, and Socket.IO for realtime events.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Setup
 
-## React Compiler
+Install dependencies:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+Create an environment file:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+echo VITE_BASE_URL=http://localhost:3000 > .env
+```
+
+Start the dev server:
+
+```bash
+npm run dev
+```
+
+## Environment Variables
+
+- `VITE_BASE_URL`: Base URL of the API server. Used for REST endpoints and Socket.IO.
+
+## Scripts
+
+- `npm run dev` - Start Vite dev server
+- `npm run build` - Production build
+- `npm run preview` - Preview production build
+- `npm run lint` - Lint the project
+
+## Routes
+
+Public routes:
+
+- `/` - Landing (Start)
+- `/login` - User login
+- `/signup` - User signup
+- `/captain-login` - Captain login
+- `/captain-signup` - Captain signup
+
+User routes (protected):
+
+- `/home` - User home
+- `/riding` - User ride status
+- `/user/logout` - User logout
+
+Captain routes (protected):
+
+- `/captain-home` - Captain home
+- `/captain-riding` - Captain ride status
+- `/captain/logout` - Captain logout
+
+## Authentication Flow
+
+- Login and signup store the JWT in `localStorage` under `token`.
+- Protected routes use `UserProtectWrapper` or `CaptainProtectWrapper` to fetch `/api/users/profile` or `/api/captains/profile`.
+- If the token is missing or invalid, the user is redirected to the respective login page.
+
+## Realtime Events
+
+Socket.IO connects to `VITE_BASE_URL` on load.
+
+Common events emitted by the server:
+
+- `new-ride` - Notify captains of a new ride
+- `ride-confirmed` - Notify user when a ride is accepted
+- `ride-started` - Notify user when a ride starts
+- `ride-ended` - Notify user when a ride ends
+
+## Folder Highlights
+
+- `src/pages` - Route-level screens
+- `src/components` - Reusable UI pieces (ride panels, tracking, popups)
+- `src/context` - Global state (user, captain, socket)

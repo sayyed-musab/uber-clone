@@ -748,3 +748,276 @@ Content-Type: application/json
   "error": "Unauthorized"
 }
 ```
+
+## POST /api/rides/confirm
+
+### Description
+
+Captains accept a pending ride.
+
+### Authentication
+
+Captain auth required. Provide either:
+
+- `Authorization: Bearer <token>`
+- `token` cookie
+
+### Request Body
+
+Content-Type: application/json
+
+```json
+{
+  "rideId": "<rideId>"
+}
+```
+
+#### Validation Rules
+
+- `rideId`: required, valid MongoDB ObjectId
+
+### Responses
+
+#### 200 OK
+
+```json
+{
+  "_id": "<id>",
+  "user": {
+    "_id": "<userId>",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": "<socketId>"
+  },
+  "captain": {
+    "_id": "<captainId>",
+    "fullName": {
+      "firstName": "Jane",
+      "lastName": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "status": "active",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC-1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": "<socketId>"
+  },
+  "pickup": "MG Road, Bengaluru",
+  "destination": "Indiranagar, Bengaluru",
+  "fare": 155,
+  "status": "accepted",
+  "duration": null,
+  "distance": null,
+  "paymentID": null,
+  "orderId": null,
+  "signature": null,
+  "otp": "123456"
+}
+```
+
+#### 400 Bad Request
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid ride id",
+      "param": "rideId",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "message": "<error message>"
+}
+```
+
+## GET /api/rides/start-ride
+
+### Description
+
+Starts a ride after OTP verification.
+
+### Authentication
+
+Captain auth required. Provide either:
+
+- `Authorization: Bearer <token>`
+- `token` cookie
+
+### Query Params
+
+- `rideId` (string, valid MongoDB ObjectId)
+- `otp` (string, length 6)
+
+### Responses
+
+#### 200 OK
+
+```json
+{
+  "_id": "<id>",
+  "user": {
+    "_id": "<userId>",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": "<socketId>"
+  },
+  "captain": {
+    "_id": "<captainId>",
+    "fullName": {
+      "firstName": "Jane",
+      "lastName": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "status": "active",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC-1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": "<socketId>"
+  },
+  "pickup": "MG Road, Bengaluru",
+  "destination": "Indiranagar, Bengaluru",
+  "fare": 155,
+  "status": "ongoing",
+  "duration": null,
+  "distance": null,
+  "paymentID": null,
+  "orderId": null,
+  "signature": null,
+  "otp": "123456"
+}
+```
+
+#### 400 Bad Request
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid OTP",
+      "param": "otp",
+      "location": "query"
+    }
+  ]
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "message": "<error message>"
+}
+```
+
+## POST /api/rides/end-ride
+
+### Description
+
+Completes an ongoing ride.
+
+### Authentication
+
+Captain auth required. Provide either:
+
+- `Authorization: Bearer <token>`
+- `token` cookie
+
+### Request Body
+
+Content-Type: application/json
+
+```json
+{
+  "rideId": "<rideId>"
+}
+```
+
+#### Validation Rules
+
+- `rideId`: required, valid MongoDB ObjectId
+
+### Responses
+
+#### 200 OK
+
+```json
+{
+  "_id": "<id>",
+  "user": {
+    "_id": "<userId>",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": "<socketId>"
+  },
+  "captain": {
+    "_id": "<captainId>",
+    "fullName": {
+      "firstName": "Jane",
+      "lastName": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "status": "active",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC-1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": "<socketId>"
+  },
+  "pickup": "MG Road, Bengaluru",
+  "destination": "Indiranagar, Bengaluru",
+  "fare": 155,
+  "status": "completed",
+  "duration": null,
+  "distance": null,
+  "paymentID": null,
+  "orderId": null,
+  "signature": null,
+  "otp": "123456"
+}
+```
+
+#### 400 Bad Request
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid ride id",
+      "param": "rideId",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### 500 Internal Server Error
+
+```json
+{
+  "message": "<error message>"
+}
+```

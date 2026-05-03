@@ -1,7 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const FinishRide = (props) => {
+  const location = useLocation();
+  const ride = location.state.ride || {};
+  const navigate = useNavigate();
+
+  async function endRide() {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/api/rides/end-ride`,
+      {
+        rideId: ride._id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+    );
+
+    if (response.status === 200) {
+      navigate("/captain-home");
+    }
+  }
+
   return (
     <div>
       <h5
@@ -17,10 +40,12 @@ const FinishRide = (props) => {
         <div className="flex items-center gap-3 ">
           <img
             className="h-12 rounded-full object-cover w-12"
-            src="https://i.pinimg.com/236x/af/26/28/af26280b0ca305be47df0b799ed1b12b.jpg"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/3840px-User_icon_2.svg.png"
             alt=""
           />
-          <h2 className="text-lg font-medium">Harshi Pateliya</h2>
+          <h2 className="text-lg font-medium capitalize">
+            {ride.user?.fullName.firstName}
+          </h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
       </div>
@@ -29,33 +54,35 @@ const FinishRide = (props) => {
           <div className="flex items-center gap-5 p-3 border-b-2">
             <i className="ri-map-pin-user-fill"></i>
             <div>
-              <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">M.G. Road, Pune</p>
+              <p className="text-sm -mt-1 text-gray-600 capitalize">
+                {ride.pickup}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
             <i className="text-lg ri-map-pin-2-fill"></i>
             <div>
-              <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">Koregaon Park, Pune</p>
+              <p className="text-sm -mt-1 text-gray-600 capitalize">
+                {ride.destination}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3">
             <i className="ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">₹193.20 </h3>
+              <h3 className="text-lg font-medium">₹{ride.fare} </h3>
               <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
             </div>
           </div>
         </div>
 
         <div className="mt-10 w-full">
-          <Link
-            to="/captain-home"
+          <button
+            onClick={endRide}
             className="w-full mt-5 flex  text-lg justify-center bg-green-600 text-white font-semibold p-3 rounded-lg"
           >
             Finish Ride
-          </Link>
+          </button>
         </div>
       </div>
     </div>

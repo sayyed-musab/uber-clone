@@ -8,6 +8,7 @@ import {
   mapsRoutes,
   rideRoutes,
 } from "./routes/index.js";
+import { initializeSocket } from "./socket.js";
 
 const app = express();
 app.use(cors());
@@ -25,6 +26,8 @@ app.use("/api/captains", captainRoutes);
 app.use("/api/maps", mapsRoutes);
 app.use("/api/rides", rideRoutes);
 
-app.listen(process.env.PORT || 3000, () => {
+const server = app.listen(process.env.PORT || 3000, () => {
   console.log(`Server is running on port ${process.env.PORT || 3000}`);
 });
+
+initializeSocket(server);

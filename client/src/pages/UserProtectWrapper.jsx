@@ -22,7 +22,7 @@ const UserProtectWrapper = ({ children }) => {
       })
       .then((response) => {
         if (response.status === 200 && response.data.user) {
-          setUser(response.data);
+          setUser(response.data.user);
           setIsLoading(false);
         } else {
           navigate("/login");
