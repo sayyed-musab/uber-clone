@@ -19,57 +19,33 @@ This is a comprehensive ride-sharing application that connects users and drivers
 
 ### User Features
 
-**User Login**
-![User Login](screenshots/user-login.png)
+**User Login** | **User Signup** | **User Home**
+<br>
+<img src="screenshots/user-login.png" alt="User Login" width="200" /> <img src="screenshots/user-signup.png" alt="User Signup" width="200" /> <img src="screenshots/user-home.png" alt="User Home" width="200" />
 
-**User Signup**
-![User Signup](screenshots/user-signup.png)
+**Search Location** | **Select Vehicle** | **Confirm Ride**
+<br>
+<img src="screenshots/user-search.png" alt="Search Location" width="200" /> <img src="screenshots/user-select-vehicle.png" alt="Select Vehicle" width="200" /> <img src="screenshots/user-confirm-ride.png" alt="Confirm Ride" width="200" />
 
-**User Home - Find a Trip**
-![User Home](screenshots/user-home.png)
-
-**Search & Location Selection**
-![Search Location](screenshots/user-search.png)
-
-**Select Vehicle Type**
-![Select Vehicle](screenshots/user-select-vehicle.png)
-
-**Confirm Ride**
-![Confirm Ride](screenshots/user-confirm-ride.png)
-
-**Waiting for Driver**
-![Waiting for Driver](screenshots/user-waiting-for-driver.png)
-
-**Live Ride Tracking**
-![User Riding](screenshots/user-riding.png)
-
-**Looking for Driver**
-![Looking for Driver](screenshots/user-looking-for-driver.png)
+**Waiting for Driver** | **Live Tracking** | **Looking for Driver**
+<br>
+<img src="screenshots/user-waiting-for-driver.png" alt="Waiting for Driver" width="200" /> <img src="screenshots/user-riding.png" alt="Live Tracking" width="200" /> <img src="screenshots/user-looking-for-driver.png" alt="Looking for Driver" width="200" />
 
 ---
 
 ### Captain (Driver) Features
 
-**Captain Login**
-![Captain Login](screenshots/captain-login.png)
+**Captain Login** | **Captain Signup** | **Captain Home**
+<br>
+<img src="screenshots/captain-login.png" alt="Captain Login" width="200" /> <img src="screenshots/captain-signup.png" alt="Captain Signup" width="200" /> <img src="screenshots/captain-home.png" alt="Captain Home" width="200" />
 
-**Captain Signup**
-![Captain Signup](screenshots/captain-signup.png)
-
-**Captain Home Dashboard**
-![Captain Home](screenshots/captain-home.png)
-
-**New Ride Available (Popup)**
-![Ride Popup](screenshots/captain-ride-popup.png)
-
-**Confirm Ride to Start**
-![Captain Start Ride](screenshots/captain-start-ride.png)
-
-**Ride in Progress**
-![Captain Riding](screenshots/captain-riding.png)
+**Ride Popup** | **Start Ride** | **Ride in Progress**
+<br>
+<img src="screenshots/captain-ride-popup.png" alt="Ride Popup" width="200" /> <img src="screenshots/captain-start-ride.png" alt="Start Ride" width="200" /> <img src="screenshots/captain-riding.png" alt="Ride in Progress" width="200" />
 
 **Finish Ride**
-![Finish Ride](screenshots/captain-finish-ride.png)
+<br>
+<img src="screenshots/captain-finish-ride.png" alt="Finish Ride" width="200" />
 
 ---
 
